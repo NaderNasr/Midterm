@@ -5,6 +5,5 @@ CREATE TABLE websites (
   name VARCHAR(255) NOT NULL,
   url VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
-  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-  organization_id INTEGER REFERENCES organizations(id) ON DELETE CASCADE
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
 );
