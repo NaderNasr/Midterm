@@ -6,11 +6,11 @@ $(() => {
 });
 
 const onClick = () => {
-  $.get("/api/websites")
+  $.get("/api/users")
     .then((data) => {
       const list = $("#list");
-      for (websites of data.websites) {
-        const li = `<li>${websites.url}</li>`;
+      for (users of data.users) {
+        const li = `<li>${users.url}</li>`;
         list.append(li);
       }
     })
