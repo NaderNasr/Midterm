@@ -54,9 +54,9 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
-// app.get("/api/users", (req, res) => {
-//   res.render("users");
-// });
+app.get("/api/websites", (req, res) => {
+  res.render("websites");
+});
 
 app.listen(PORT, () => {
   // console.log(process.env);
