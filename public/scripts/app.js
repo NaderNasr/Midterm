@@ -10,7 +10,7 @@ const onClick = () => {
     .then((data) => {
       const list = $("#list");
       for (users of data.users) {
-        const li = `<li>${users.url}</li>`;
+        const li = `<li>${users.name}</li>`;
         list.append(li);
       }
     })
