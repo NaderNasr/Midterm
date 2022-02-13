@@ -60,10 +60,11 @@ app.use("/api/websites", websitesRoutes(db));
 // Separate them into separate routes files (see above).
 
 app.get("/", (req, res) => {
-  res.render('register');
+  console.log(req.session);
+  res.render('index');
 });
 
-app.get("/api/websites", (req, res) => {
+app.get("/register", (req, res) => {
   res.render("register");
 });
 
@@ -81,11 +82,10 @@ const addUser = (name, password, email) => {
 //Fix to authenticate email
 app.post("/register", (req, res) => {
   let name = req.body.name;
-  let password = req.body.password[0];
-  let hashed = bcrypt.hashSync(password, 12);
+  let hashedPassword = bcrypt.hashSync(req.body.password[0], 12);
   let email = req.body.email;
   //verify email
-  addUser(name, hashed, email);
+  addUser(name, hashedPassword, email);
   res.render('index');
   //if email exists alert user
 });
@@ -98,17 +98,6 @@ const getUserWithEmail = (email) => {
       console.log(err.message);
     });
 };
-
-const login = (email, password) => {
-  return getUserWithEmail(email)
-    .then(user => {
-      if (bcrypt.compareSync(password, user.password)) {
-        return user;
-      }
-      return null;
-    });
-};
-
 
 
 app.post("/login", (req, res) => {
@@ -127,9 +116,7 @@ app.post("/login", (req, res) => {
         console.log('wrong email');
         return;
       }
-      return res.render('index');
-
-
+      return res.redirect('/');
     })
     .catch((err) => {
       console.log(err);
@@ -143,8 +130,9 @@ app.get('/login', (req, res) => {
 
 app.post('/logout', (req, res) => {
   req.session.userId = null;
-  res.send({});
+  res.redirect('/register');
 });
+
 
 app.listen(PORT, () => {
   // console.log(process.env);
