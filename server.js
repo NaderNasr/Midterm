@@ -99,14 +99,37 @@ const getUserWithEmail = (email) => {
     });
 };
 
+const login = (email, password) => {
+  return getUserWithEmail(email)
+    .then(user => {
+      if (bcrypt.compareSync(password, user.password)) {
+        return user;
+      }
+      return null;
+    });
+};
+
+
 
 app.post("/login", (req, res) => {
-  getUserWithEmail(req.body.email)
-    .then((email) => {
-      if (email === undefined) {
-        return console.log('wrong email');
+  const email = req.body.email;
+  const password = req.body.password[0];
+  console.log('HELLO    ',password);
+
+  if (!email || !password) {
+    console.log('input cant be empty');
+    return;
+  }
+
+  getUserWithEmail(email)
+    .then((result) => {
+      if (!result || !bcrypt.compareSync(password, result.password)) {
+        console.log('wrong email');
+        return;
       }
-      res.render('index');
+      return res.render('index');
+
+
     })
     .catch((err) => {
       console.log(err);
