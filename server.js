@@ -9,6 +9,7 @@ const app = express();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
+const bcrypt = require('bcrypt');
 
 // PG database client/connection setup
 const { Pool } = require("pg");
@@ -45,6 +46,7 @@ app.use(express.static("public"));
 const usersRoutes = require("./routes/users");
 const websitesRoutes = require("./routes/websites");
 const organizationsRoutes = require("./routes/organizations");
+const { password } = require("pg/lib/defaults");
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
@@ -80,11 +82,41 @@ const addUser = (name, password, email) => {
 app.post("/register", (req, res) => {
   let name = req.body.name;
   let password = req.body.password[0];
+  let hashed = bcrypt.hashSync(password, 12);
   let email = req.body.email;
-
-  addUser(name, password, email);
+  //verify email
+  addUser(name, hashed, email);
   res.render('index');
+  //if email exists alert user
 });
+
+const getUserWithEmail = (email) => {
+  return db
+    .query(`SELECT * FROM users WHERE users.email = $1;` ,[email])
+    .then((result) => result.rows[0])
+    .catch((err) => {
+      console.log(err.message);
+    });
+};
+
+
+app.post("/login", (req, res) => {
+  getUserWithEmail(req.body.email)
+    .then((email) => {
+      if (email === undefined) {
+        return console.log('wrong email');
+      }
+      res.render('index');
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+
 
 app.post('/logout', (req, res) => {
   req.session.userId = null;
