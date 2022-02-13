@@ -7,6 +7,8 @@ const sassMiddleware = require("./lib/sass-middleware");
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const bodyParser = require("body-parser");
+const cookieSession = require('cookie-session');
 
 // PG database client/connection setup
 const { Pool } = require("pg");
@@ -18,6 +20,11 @@ db.connect();
 // 'dev' = Concise output colored by response status for development use.
 //         The :status token will be colored red for server error codes, yellow for client error codes, cyan for redirection codes, and uncolored for all other codes.
 app.use(morgan("dev"));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieSession({
+  name: 'session',
+  keys: ['df9c8e16-42ca-46a3-8457-aa83a2e94930', 'dd2f9568-af42-4ccf-abfe-da1f5563d6d0']
+}));
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
@@ -51,11 +58,37 @@ app.use("/api/websites", websitesRoutes(db));
 // Separate them into separate routes files (see above).
 
 app.get("/", (req, res) => {
-  res.render("index");
+  res.render('register');
 });
 
 app.get("/api/websites", (req, res) => {
-  res.render("websites");
+  res.render("register");
+});
+
+// Add function in helper dir
+const addUser = (name, password, email) => {
+  return db.query(`
+  INSERT INTO users (name, password, email )
+  VALUES($1, $2, $3) RETURNING *;`, [name, password, email])
+    .then((result) => result.rows[0])
+    .catch((error) => {
+      console.log(error.message);
+    });
+};
+
+//Fix to authenticate email
+app.post("/register", (req, res) => {
+  let name = req.body.name;
+  let password = req.body.password[0];
+  let email = req.body.email;
+
+  addUser(name, password, email);
+  res.render('index');
+});
+
+app.post('/logout', (req, res) => {
+  req.session.userId = null;
+  res.send({});
 });
 
 app.listen(PORT, () => {
