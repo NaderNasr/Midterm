@@ -2,15 +2,20 @@
 // Client facing scripts here
 $(() => {
   console.log("ready");
-  $("#button").on('click', onClick);
+  $("#newVault").on('click', onClick);
 });
 
 const onClick = () => {
-  $.get("/api/users")
+  $.get("/api/websites")
     .then((data) => {
       const list = $("#list");
       for (users of data.users) {
-        const li = `<li>${users.name}</li>`;
+        const li = `
+          <h1>${users.name}</h1>
+          <h2>Name</h2>
+          <p>URL</p>
+          <p>Password</p>
+        `;
         list.append(li);
       }
     })
