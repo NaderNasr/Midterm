@@ -47,6 +47,7 @@ const usersRoutes = require("./routes/users");
 const websitesRoutes = require("./routes/websites");
 const organizationsRoutes = require("./routes/organizations");
 const { password } = require("pg/lib/defaults");
+const { redirect } = require("express/lib/response");
 
 
 
@@ -86,6 +87,8 @@ const addUser = (name, password, email) => {
       console.log(error.message);
     });
 };
+
+
 
 //Fix to authenticate email
 app.post("/register", (req, res) => {
@@ -141,17 +144,29 @@ app.post('/logout', (req, res) => {
   res.redirect('/register');
 });
 
+const addToVault = (name, username, url, password) => {
+  return db.query(`
+  INSERT INTO websites (name, username, url, password)
+  VALUES($1, $2, $3, $4) RETURNING *;
+  `, [name, username, url, password])
+    .then((result) => {
+      result.rows[0];
+    });
+};
+
+app.post('/savePassword', (req, res) => {
+  // name, username, url, password
+  const name = req.body.name;
+  const username = req.body.username;
+  const url = req.body.url;
+  const password = req.body.password;
+  //Find user_id /////////////////////////////////////////////////////////////////// HELP
+  addToVault(name, username, url, password);
+  res.redirect('/');
+});
+
+
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
-});
-
-app.get("/login", (req,res) => {
-  res.render("login");
-});
-
-
-app.get("/register", function(req, res) {
-
-
-  res.render("register");
 });
