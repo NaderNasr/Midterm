@@ -11,13 +11,17 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
   <script type="text/javascript" src="/scripts/app.js"></script>
+  <script type="text/javascript" src="/scripts/passwordGenerator.js"></script>
+
 </head>
 
 <body>
   <%- include('partials/header') %>
+  <%- include('partials/sidebar') %>
+
   <div class="container-fluid">
 
-    <form method="POST" action="/savePassword" style="margin-left: 20px; margin-top: 10px">
+    <form method="GET" action="/" style="margin-left: 20px; margin-top: 10px">
       <h1>Create a New Password Vault</h1>
       <div class="form-row">
             <div class="form-group col-md-6">
@@ -31,17 +35,30 @@
           </div>
           <div class="form-group">
             <label for="inputAddress">Website URL</label>
-            <input type="url" class="form-control" name="url" placeholder="url" value="httpe://" required>
+            <input type="url" class="form-control" name="url" placeholder="url" value="https://" required>
           </div>
 
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label for="inputAddress2">Password</label>
-              <input type="password" class="form-control" name="password" placeholder="Password" required>
+                <label for="uppercase">Uppercase</label>
+                <input type="checkbox" name="uppercase">
+                <br/>
+                <label for="lowercase">Lowercase</label>
+                <input type="checkbox" name="lowercase">
+                <br/>
+                <label for="number">Number</label>
+                <input type="checkbox" name="number">
+                <br/>
+                <label for="sym">Symbols</label>
+                <input type="checkbox" name="symbol">
+                <br/>
+              </div>
+              <button class="generate">Generate</button>
+              <div class="result"></div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 color">
               <label>copy to clipboard</label>
-              <button class="btn btn-primary">
+              <button class="btn btn-primary copyToClipboard">
                 Copy
               </button>
             </div>
