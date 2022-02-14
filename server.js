@@ -75,6 +75,9 @@ app.get("/login", (req,res) => {
   res.render("login")
 });
 
+app.get("/members", (req,res) => {
+  res.render("members")
+});
 
 app.get("/register", function (req, res) {
 
