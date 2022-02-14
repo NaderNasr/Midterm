@@ -69,7 +69,8 @@ app.use("/api/websites", websitesRoutes(db));
 // Separate them into separate routes files (see above).
 
 app.get("/", (req, res) => {
-  console.log(req.session);
+  const session = req.session["user_id"];
+  console.log(session);
   res.render('index');
 });
 
@@ -97,7 +98,7 @@ app.post("/register", (req, res) => {
   let email = req.body.email;
   //verify email
   addUser(name, hashedPassword, email);
-  res.render('index');
+  res.redirect('/');
   //if email exists alert user
 });
 
@@ -164,6 +165,8 @@ app.post('/savePassword', (req, res) => {
   addToVault(name, username, url, password);
   res.redirect('/');
 });
+
+// app.post('/delete') delete from table DELETE FROM ...
 
 
 
