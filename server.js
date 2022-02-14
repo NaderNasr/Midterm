@@ -84,3 +84,7 @@ app.get("/register", function (req, res) {
 
   res.render("register");
 });
+
+app.get("/members", (req,res) => {
+  res.render("members")
+});
