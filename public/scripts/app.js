@@ -11,6 +11,7 @@ $(() => {
     return document.querySelector("input[name=" + type + "]").checked;
   };
 
+  //if all the checkboxes are unchecked return an alery
   generate.addEventListener("click", () => {
     if (!document.querySelector("input[name=uppercase]").checked &&
         !document.querySelector("input[name=number]").checked &&
@@ -39,6 +40,18 @@ $(() => {
     console.log(result);
     document.querySelector(".result").innerHTML = result;
   });
+
+  // onclick copy to clipboard
+
+  const copy = document.querySelector(".copyToClipboard");
+  copy.addEventListener("click", () => {
+
+      
+
+  });
+
+
+
 });
 // $("#validate").on('submit', isChecked);
 
