@@ -1,3 +1,5 @@
+
+
 const generatePassword = (length, uppercase, lowerCase, numbers, specialChars) => {
 
   let characters = '';
