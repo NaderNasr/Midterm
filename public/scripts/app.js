@@ -12,7 +12,8 @@ $(() => {
   };
 
   //if all the checkboxes are unchecked return an alery
-  generate.addEventListener("click", () => {
+  generate.addEventListener("click", (event) => {
+   event.preventDefault()
     if (!document.querySelector("input[name=uppercase]").checked &&
         !document.querySelector("input[name=number]").checked &&
         !document.querySelector("input[name=lowercase]").checked &&
@@ -45,8 +46,26 @@ $(() => {
 
   const copy = document.querySelector(".copyToClipboard");
   copy.addEventListener("click", () => {
+        /* Get the text field */
+        let copyText = document.querySelector(".result");
+       console.log("text")
+        /* Select the text field */
 
-      
+        /* Copy the text inside the text field */
+        navigator.clipboard
+        .writeText(copyText.textContent)
+        .then(() => {
+          alert("successfully copied");
+        })
+        .catch(() => {
+          alert("something went wrong");
+        });
+        /* Alert the copied text */
+
+
+
+
+
 
   });
 
