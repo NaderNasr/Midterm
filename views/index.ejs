@@ -11,10 +11,14 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
   <script type="text/javascript" src="/scripts/app.js"></script>
+  <script type="text/javascript" src="/scripts/passwordGenerator.js"></script>
+
 </head>
 
 <body>
   <%- include('partials/header') %>
+
+
   <div class="container-fluid">
 
     <form method="POST" action="/savePassword" style="margin-left: 20px; margin-top: 10px">
@@ -36,10 +40,27 @@
 
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label for="inputAddress2">Password</label>
-              <input type="password" class="form-control" name="password" placeholder="Password" required>
+              <input id="checkbox" type="checkbox"/>
+              <label for="checkbox_1">Contains Special Characters</label>
+              <br/>
+              <input id="checkbox" type="checkbox"/>
+              <label for="checkbox_2">Contains Lowercase</label>
+              <br/>
+              <input id="checkbox" type="checkbox"/>
+              <label for="checkbox_3">Contains Uppercase</label>
+              <br/>
+              <input id="checkbox" type="checkbox"/>
+              <label for="checkbox_4">Contains Numbers</label>
+              <br/>
+              <input id="checkbox" type="checkbox"/>
+              <label for="checkbox_5">12 Characters</label>
+              <br/>
+              <input id="checkbox" type="checkbox"/>
+              <label for="checkbox_6">24 Characters</label>
+              <br/>
+              <button>Generate Password</button>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6 color">
               <label>copy to clipboard</label>
               <button class="btn btn-primary">
                 Copy
