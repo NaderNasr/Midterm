@@ -5,16 +5,16 @@
 
 // Client facing scripts here
 $(() => {
+  $(".copy").on('click', onClickCopy);
 
   const generate = document.querySelector(".generate");
-
   const name = (type) => {
     return document.querySelector("input[name=" + type + "]").checked;
   };
 
   //if all the checkboxes are unchecked return an alert
-  generate.addEventListener("click", () => {
-
+  generate.addEventListener("click", (e) => {
+    e.preventDefault();
     if (!document.querySelector("input[name=uppercase]").checked &&
         !document.querySelector("input[name=number]").checked &&
         !document.querySelector("input[name=lowercase]").checked &&
@@ -42,19 +42,28 @@ $(() => {
     console.log(result);
     document.querySelector(".result").innerHTML = result;
   });
-
-  // onclick copy to clipboard
-
-  // const copy = document.querySelector(".copyToClipboard");
-  // copy.addEventListener("click", () => {
-
-
-
-  // });
-
-
-
 });
+
+
+const copyToClipBoard = (str) => {
+  const el = document.createElement('textarea');
+  el.value = str;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+};
+
+const onClickCopy = (e) => {
+  e.preventDefault();
+  let copyText = document.querySelector(".result").textContent;
+  alert(`copied to clipboard, \n password:  ${copyText} `);
+  copyToClipBoard(copyText);
+};
+
+
+
+
 // $("#validate").on('submit', isChecked);
 
 // Renders a new saved website password

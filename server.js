@@ -69,12 +69,43 @@ app.use("/api/websites", websitesRoutes(db));
 
 app.get("/", (req, res) => {
   const session = req.session["user_id"];
-  console.log(session);
+  console.log('                            USER COOKIE SESSION ID: ======>        ' +  JSON.stringify(session));
+  if (!session) {
+    res.render('register');
+  }
   res.render('index');
 });
 
 app.get("/register", (req, res) => {
-  res.render("register");
+  const session = req.session["user_id"];
+  if (!session) {
+    res.render("register");
+  }
+  res.render("index");
+
+});
+
+app.get("/login", (req, res) => {
+  const session = req.session["user_id"];
+  if (!session) {
+    res.render("login");
+  }
+  res.render("index");
+
+});
+
+const renderUserWebsite = () => {
+  return db.query(`
+      SELECT websites.*, users.name FROM websites
+    `, [userId]);
+};
+
+app.get("/members", (req, res) => {
+  const session = req.session["user_id"];
+  if (!session) {
+    res.render("login");
+  }
+  res.render("member_homepage");
 });
 
 // Add function in helper dir
@@ -95,9 +126,21 @@ app.post("/register", (req, res) => {
   let name = req.body.name;
   let hashedPassword = bcrypt.hashSync(req.body.password[0], 12);
   let email = req.body.email;
+  console.log(req.session["user_id"]);
   //verify email
-  addUser(name, hashedPassword, email);
-  res.redirect('/');
+  addUser(name, hashedPassword, email)
+    .then((res) => {
+      res['userId'] = {
+        id: name,
+        email,
+        password: hashedPassword
+      };
+    });
+
+  req.session['userId'] = name;
+  res.render('index');
+
+
   //if email exists alert user
 });
 
@@ -114,7 +157,7 @@ const getUserWithEmail = (email) => {
 app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password[0];
-  console.log('HELLO    ',password);
+  // const userSession = req.session['user_id'];
 
   if (!email || !password) {
     console.log('input cant be empty');
@@ -127,6 +170,7 @@ app.post("/login", (req, res) => {
         console.log('wrong email');
         return;
       }
+      req.session["user_id"] = result.id;
       return res.redirect('/');
     })
     .catch((err) => {
@@ -140,7 +184,7 @@ app.get('/login', (req, res) => {
 
 
 app.post('/logout', (req, res) => {
-  req.session.userId = null;
+  req.session["user_id"] = null;
   res.redirect('/register');
 });
 
@@ -154,13 +198,10 @@ const addToVault = (name, username, url, password) => {
     })
     .catch((err) => {
       console.log(err.message);
-    })
-    .finally(() => {
-      Pool.end();
     });
 };
 
-app.post('/savePassword', (req, res) => {
+app.post('/membersPage', (req, res) => {
   // name, username, url, password
   const name = req.body.name;
   const username = req.body.username;
