@@ -5,14 +5,16 @@
 
 // Client facing scripts here
 $(() => {
+
   const generate = document.querySelector(".generate");
 
   const name = (type) => {
     return document.querySelector("input[name=" + type + "]").checked;
   };
 
-  //if all the checkboxes are unchecked return an alery
+  //if all the checkboxes are unchecked return an alert
   generate.addEventListener("click", () => {
+
     if (!document.querySelector("input[name=uppercase]").checked &&
         !document.querySelector("input[name=number]").checked &&
         !document.querySelector("input[name=lowercase]").checked &&
@@ -43,12 +45,12 @@ $(() => {
 
   // onclick copy to clipboard
 
-  const copy = document.querySelector(".copyToClipboard");
-  copy.addEventListener("click", () => {
+  // const copy = document.querySelector(".copyToClipboard");
+  // copy.addEventListener("click", () => {
 
-      
 
-  });
+
+  // });
 
 
 

@@ -46,14 +46,13 @@ app.use(express.static("public"));
 const usersRoutes = require("./routes/users");
 const websitesRoutes = require("./routes/websites");
 const organizationsRoutes = require("./routes/organizations");
+// const registerRoutes = require("./routes/register");
 const { password } = require("pg/lib/defaults");
 const { redirect } = require("express/lib/response");
 
 
 
 
-// const registerRoutes = require("./routes/register");
-// const registerRoutes = require("./routes/register");
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
 app.use("/api/users", usersRoutes(db));
@@ -131,7 +130,7 @@ app.post("/login", (req, res) => {
       return res.redirect('/');
     })
     .catch((err) => {
-      console.log(err);
+      console.log(err.message);
     });
 });
 
@@ -152,6 +151,12 @@ const addToVault = (name, username, url, password) => {
   `, [name, username, url, password])
     .then((result) => {
       result.rows[0];
+    })
+    .catch((err) => {
+      console.log(err.message);
+    })
+    .finally(() => {
+      Pool.end();
     });
 };
 
