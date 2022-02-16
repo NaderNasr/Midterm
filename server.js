@@ -46,12 +46,14 @@ app.use(express.static("public"));
 const usersRoutes = require("./routes/users");
 const websitesRoutes = require("./routes/websites");
 const organizationsRoutes = require("./routes/organizations");
+// const registerRoute = require("./routes/register");
+
 // const registerRoutes = require("./routes/register");
 const { password } = require("pg/lib/defaults");
 const { redirect } = require("express/lib/response");
 
 
-
+const pleaseLoginMSG = '<h1 style="margin: 20%;"> Hey Stranger 👋 <br/> Please <a href="/register">Register</a> or <a href="/login">Login</a> to access the vault 🔐 </h1>';
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
@@ -66,63 +68,28 @@ app.use("/api/websites", websitesRoutes(db));
 // Home page
 // Warning: avoid creating more routes in this file!
 // Separate them into separate routes files (see above).
-
-app.get("/", (req, res) => {
-  const session = req.session["user_id"];
-  console.log('                            USER COOKIE SESSION ID: ======>        ' +  JSON.stringify(session));
-  if (!session) {
-    res.render('register');
-  }
-  res.render('index');
-});
-
-app.get("/register", (req, res) => {
-  const session = req.session["user_id"];
-  if (!session) {
-    res.render("register");
-  }
-  res.render("index");
-
-});
-
-app.get("/login", (req, res) => {
-  const session = req.session["user_id"];
-  if (!session) {
-    res.render("login");
-  }
-  res.render("index");
-
-});
-
+//////////////////////////////////////////////////////////////////DB FUNCS
 const renderUserWebsite = (userId) => {
   return db.query(`
-  SELECT users.id, websites.name FROM users
-JOIN websites ON users.id = user_id
-WHERE users.id = $1
-    `, [userId])
+  SELECT users.name as username, users.id FROM users
 
+  WHERE users.id = $1
+  `, [userId])
     .catch((error) => {
       console.log('renderUserWebsite: ', error.message);
     });
 };
 
-app.get("/members", (req, res) => {
-  const session = req.session["user_id"];
-  if (!session) {
-    res.render("login");
-  }
-  renderUserWebsite(session)
-    .then((data) => {
-      let result = data.rows[0];
-      let tempVars = {
-        result
-      };
-      console.log(tempVars);
-      res.render("member_homepage", tempVars);
+const joinUserWebsite = (userId) => {
+  return db.query(`
+  SELECT websites.username, websites.name, websites.password, websites.url FROM websites
+  WHERE user_id = $1
+  `, [userId])
+    .catch((error) => {
+      console.log('renderUserWebsite: ', error.message);
     });
+};
 
-
-});
 
 // Add function in helper dir
 const addUser = (name, password, email) => {
@@ -135,10 +102,75 @@ const addUser = (name, password, email) => {
     });
 };
 
+//////////////////////////////////////////////////////////////////GET
+app.get("/", (req, res) => {
+  const session = req.session["user_id"];
+  console.log('member ID: ', session);
+  if (!session) {
+    return res.send(pleaseLoginMSG);
+  }
+  renderUserWebsite(session)
+    .then((result) => {
+      let vars = {
+        result: result.rows[0],
+        user: session
+      };
+      res.render("index", vars);
+    });
+});
 
+app.get("/register", (req, res) => {
+  const session = req.session["user_id"];
+
+  let vars = {
+    user: session
+  };
+  res.render('register', vars);
+
+});
+
+app.get("/login", (req, res) => {
+  const session = req.session["user_id"];
+
+  let vars = {
+
+    user: session
+  };
+
+  res.render('login', vars);
+
+});
+
+app.get("/members", (req, res) => {
+  const session = req.session["user_id"];
+  console.log('member ID: ', session);
+  if (!session) {
+    return res.send(pleaseLoginMSG);
+  }
+  renderUserWebsite(session)
+    .then((result) => {
+      // let x = result.rows[0].id;
+      joinUserWebsite(1)
+        .then((joined) => {
+          console.log(joined.rows[0]);
+          let vars = {
+            result: result.rows[0],
+            joined: joined.rows[0],
+            user: session
+          };
+
+          res.render("member_homepage", vars);
+        });
+
+    });
+
+
+});
+///////////////////////////////////////////////////////////////////////POST
 
 //Fix to authenticate email
 app.post("/register", (req, res) => {
+
   let name = req.body.name;
   let hashedPassword = bcrypt.hashSync(req.body.password[0], 12);
   let email = req.body.email;
@@ -146,15 +178,14 @@ app.post("/register", (req, res) => {
   //verify email
   addUser(name, hashedPassword, email)
     .then((result) => {
-      result['userId'] = {
-        name,
-        email,
-        hashedPassword
-      };
-    });
 
-  req.session['userId'] = name;
-  res.render('index');
+      req.session["user_id"] = result.id;
+      return res.redirect('/members');
+    })
+    .catch((err) => {
+      console.log(err.message);
+      res.send('Som ting we n t - W0n g');
+    });
 
 
   //if email exists alert user
@@ -211,13 +242,15 @@ const addToVault = (name, username, url, password) => {
 app.post('/membersPage', (req, res) => {
   const session = req.session["user_id"];
   if (!session) {
-    res.render('/login');
+    let tempVars = {
+      session: null
+    };
+    return res.render('login', tempVars);
   }
   const name = req.body.name;
   const username = req.body.username;
   const url = req.body.url;
   const password = req.body.password;
-
 
   addToVault(name, username, url, password)
     .then((result) => {
@@ -228,7 +261,7 @@ app.post('/membersPage', (req, res) => {
     .catch((err) => {
       console.log(err.message);
     });
-  
+
   res.render('member_homepage');
 });
 
