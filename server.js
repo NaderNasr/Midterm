@@ -46,14 +46,15 @@ app.use(express.static("public"));
 const usersRoutes = require("./routes/users");
 const websitesRoutes = require("./routes/websites");
 const organizationsRoutes = require("./routes/organizations");
+// const registerRoute = require("./routes/register");
+
+// const registerRoutes = require("./routes/register");
 const { password } = require("pg/lib/defaults");
 const { redirect } = require("express/lib/response");
 
 
+const pleaseLoginMSG = '<h1 style="margin: 20%;"> Hey Stranger 👋 <br/> Please <a href="/register">Register</a> or <a href="/login">Login</a> to access the vault 🔐 </h1>';
 
-
-// const registerRoutes = require("./routes/register");
-// const registerRoutes = require("./routes/register");
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
 app.use("/api/users", usersRoutes(db));
@@ -67,16 +68,28 @@ app.use("/api/websites", websitesRoutes(db));
 // Home page
 // Warning: avoid creating more routes in this file!
 // Separate them into separate routes files (see above).
+//////////////////////////////////////////////////////////////////DB FUNCS
+const renderUserWebsite = (userId) => {
+  return db.query(`
+  SELECT users.name as username, users.id FROM users
 
-app.get("/", (req, res) => {
-  const session = req.session["user_id"];
-  console.log(session);
-  res.render('index');
-});
+  WHERE users.id = $1
+  `, [userId])
+    .catch((error) => {
+      console.log('renderUserWebsite: ', error.message);
+    });
+};
 
-app.get("/register", (req, res) => {
-  res.render("register");
-});
+const joinUserWebsite = (userId) => {
+  return db.query(`
+  SELECT websites.username, websites.name, websites.password, websites.url FROM websites
+  WHERE user_id = $1
+  `, [userId])
+    .catch((error) => {
+      console.log('renderUserWebsite: ', error.message);
+    });
+};
+
 
 // Add function in helper dir
 const addUser = (name, password, email) => {
@@ -89,16 +102,92 @@ const addUser = (name, password, email) => {
     });
 };
 
+//////////////////////////////////////////////////////////////////GET
+app.get("/", (req, res) => {
+  const session = req.session["user_id"];
+  console.log('member ID: ', session);
+  if (!session) {
+    return res.send(pleaseLoginMSG);
+  }
+  renderUserWebsite(session)
+    .then((result) => {
+      let vars = {
+        result: result.rows[0],
+        user: session
+      };
+      res.render("index", vars);
+    });
+});
 
+app.get("/register", (req, res) => {
+  const session = req.session["user_id"];
+
+  let vars = {
+    user: session
+  };
+  res.render('register', vars);
+
+});
+
+app.get("/login", (req, res) => {
+  const session = req.session["user_id"];
+
+  let vars = {
+
+    user: session
+  };
+
+  res.render('login', vars);
+
+});
+
+app.get("/members", (req, res) => {
+  const session = req.session["user_id"];
+  console.log('member ID: ', session);
+  if (!session) {
+    return res.send(pleaseLoginMSG);
+  }
+  renderUserWebsite(session)
+    .then((result) => {
+      // let x = result.rows[0].id;
+      joinUserWebsite(1)
+        .then((joined) => {
+          console.log(joined.rows[0]);
+          let vars = {
+            result: result.rows[0],
+            joined: joined.rows[0],
+            user: session
+          };
+
+          res.render("member_homepage", vars);
+        });
+
+    });
+
+
+});
+///////////////////////////////////////////////////////////////////////POST
 
 //Fix to authenticate email
 app.post("/register", (req, res) => {
+
   let name = req.body.name;
   let hashedPassword = bcrypt.hashSync(req.body.password[0], 12);
   let email = req.body.email;
+  console.log(req.session["user_id"]);
   //verify email
-  addUser(name, hashedPassword, email);
-  res.redirect('/');
+  addUser(name, hashedPassword, email)
+    .then((result) => {
+
+      req.session["user_id"] = result.id;
+      return res.redirect('/members');
+    })
+    .catch((err) => {
+      console.log(err.message);
+      res.send('Som ting we n t - W0n g');
+    });
+
+
   //if email exists alert user
 });
 
@@ -115,7 +204,7 @@ const getUserWithEmail = (email) => {
 app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password[0];
-  console.log('HELLO    ',password);
+  // const userSession = req.session['user_id'];
 
   if (!email || !password) {
     console.log('input cant be empty');
@@ -128,20 +217,18 @@ app.post("/login", (req, res) => {
         console.log('wrong email');
         return;
       }
+      req.session["user_id"] = result.id;
       return res.redirect('/');
     })
     .catch((err) => {
-      console.log(err);
+      console.log(err.message);
+      res.send('Wrong email or password');
     });
-});
-
-app.get('/login', (req, res) => {
-  res.render('login');
 });
 
 
 app.post('/logout', (req, res) => {
-  req.session.userId = null;
+  req.session["user_id"] = null;
   res.redirect('/register');
 });
 
@@ -149,21 +236,33 @@ const addToVault = (name, username, url, password) => {
   return db.query(`
   INSERT INTO websites (name, username, url, password)
   VALUES($1, $2, $3, $4) RETURNING *;
-  `, [name, username, url, password])
-    .then((result) => {
-      result.rows[0];
-    });
+  `, [name, username, url, password]);
 };
 
-app.post('/savePassword', (req, res) => {
-  // name, username, url, password
+app.post('/membersPage', (req, res) => {
+  const session = req.session["user_id"];
+  if (!session) {
+    let tempVars = {
+      session: null
+    };
+    return res.render('login', tempVars);
+  }
   const name = req.body.name;
   const username = req.body.username;
   const url = req.body.url;
   const password = req.body.password;
-  //Find user_id /////////////////////////////////////////////////////////////////// HELP
-  addToVault(name, username, url, password);
-  res.redirect('/');
+
+  addToVault(name, username, url, password)
+    .then((result) => {
+      //set the row to the current user id
+      result.rows[0]["user_id"] = session;
+      console.log(result.rows);
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+
+  res.render('member_homepage');
 });
 
 // app.post('/delete') delete from table DELETE FROM ...
