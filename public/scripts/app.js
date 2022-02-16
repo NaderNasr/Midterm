@@ -13,7 +13,8 @@ $(() => {
   };
 
   //if all the checkboxes are unchecked return an alert
-  generate.addEventListener("click", () => {
+  generate.addEventListener("click", (event) => {
+    event.preventDefault();
 
     if (!document.querySelector("input[name=uppercase]").checked &&
         !document.querySelector("input[name=number]").checked &&
@@ -35,7 +36,7 @@ $(() => {
 
 
     let result = "";
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 24; i++) {
       let num = Math.floor(Math.random() * password.length);
       result += password[num];
     }

@@ -6,13 +6,19 @@ const generatePassword = (length, uppercase, lowerCase, numbers, specialChars) =
 
   let result = '';
 
+  let loopLength = 0;
+
   if (length <= 5) {
     return console.log('Cant be less than 5 characters');
   }
 
-  if (!uppercase && !lowerCase && !numbers && !specialChars) {
+  if (!length && !uppercase && !lowerCase && !numbers && !specialChars) {
     return console.log('Please check at least one box');
   }
+  if (loopLength > 0){
+    length = 12;
+  }
+
 
   if (uppercase) {
     characters += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -27,14 +33,16 @@ const generatePassword = (length, uppercase, lowerCase, numbers, specialChars) =
   }
 
   if (specialChars) {
-    characters += "~*$%@#^&!?*'-=/,.{}()[]<>";
+    characters += "";
   }
 
   const charactersLength = characters.length; // if the length < 5 return alert can't be 5 or less characters
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < loopLength; i++) {
     result += characters.charAt(Math.random() * charactersLength);
   }
   return result;
 };
 
 console.log(generatePassword(12, true, true, true, true));
+
+module.exports = generatePassword;

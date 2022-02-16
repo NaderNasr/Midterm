@@ -10,6 +10,7 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
+const generatePassword = require("./public/scripts/passwordGenerator")
 
 // PG database client/connection setup
 const { Pool } = require("pg");
@@ -155,9 +156,7 @@ const addToVault = (name, username, url, password) => {
     .catch((err) => {
       console.log(err.message);
     })
-    .finally(() => {
-      Pool.end();
-    });
+
 };
 
 app.post('/savePassword', (req, res) => {
@@ -165,7 +164,10 @@ app.post('/savePassword', (req, res) => {
   const name = req.body.name;
   const username = req.body.username;
   const url = req.body.url;
-  const password = req.body.password;
+  const password = generatePassword(req.body.length, req.body.uppercase, req.body.lowercase, req.body.number, req.body.symbol);
+  console.log("this is my request body", req.body);
+  console.log("password", password)
+  console.log(req.body)
   //Find user_id /////////////////////////////////////////////////////////////////// HELP
   addToVault(name, username, url, password);
   res.redirect('/');
