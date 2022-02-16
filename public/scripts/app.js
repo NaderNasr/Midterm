@@ -5,8 +5,6 @@
 
 // Client facing scripts here
 $(() => {
-  $(".copy").on('click', onClickCopy);
-
   const generate = document.querySelector(".generate");
   const name = (type) => {
     return document.querySelector("input[name=" + type + "]").checked;
@@ -43,50 +41,3 @@ $(() => {
     document.querySelector(".result").innerHTML = result;
   });
 });
-
-
-const copyToClipBoard = (str) => {
-  const el = document.createElement('textarea');
-  el.value = str;
-  document.body.appendChild(el);
-  el.select();
-  document.execCommand('copy');
-  document.body.removeChild(el);
-};
-
-const onClickCopy = (e) => {
-  e.preventDefault();
-  let copyText = document.querySelector(".result").textContent;
-  alert(`copied to clipboard, \n password:  ${copyText} `);
-  copyToClipBoard(copyText);
-};
-
-
-
-
-// $("#validate").on('submit', isChecked);
-
-// Renders a new saved website password
-// const renderVault = () => {
-//   $.get("/api/websites")
-//     .then((data) => {
-//       const list = $("#list");
-//       for (website of data.website) {
-//         const li = `
-//           <h1>${users.name}</h1>
-//           <h2>Name</h2>
-//           <p>URL</p>
-//           <p>Password</p>
-//         `;
-//         list.append(li);
-//       }
-//     })
-//     .catch((err)=>{
-//       console.log(err);
-//     });
-// };
-
-
-
-// console.log(generateString(5)); // length
-// console.log(generateString(5, uppercase,  lowerCase, specialChars)); // length
