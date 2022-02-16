@@ -39,7 +39,6 @@ $(() => {
     console.log(result);
     document.querySelector(".result").innerHTML = result;
   });
-<<<<<<< HEAD
 
   // onclick copy to clipboard
 
