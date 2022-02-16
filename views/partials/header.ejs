@@ -1,8 +1,31 @@
 <header>
   <nav class="navbar navbar-light bg-light">
     <a class="navbar-brand" id="logo" href="/">P4SSWORd KE3PR</a>
-    <form method="POST" action="/logout" class="my-2 my-sm-0">
-      <button class="btn btn-outline-info my-2 my-sm-0">Logout</button>
-    </form>
+    <% if(!user) { %>
+
+        <div class="form-inline my-2 my-lg-0 mr-sm-1">
+          <button class="btn btn-info my-2 my-sm-0 mr-sm-1" onclick="window.location.href='/login'">Login</button>
+          <button class="btn btn-success my-2 my-sm-0"  onclick="window.location.href='/register'">Get Started</button>
+        </div>
+
+      <% } else { %>
+
+        <form class="form-inline my-2 my-lg-0" method="POST" action="/logout">
+
+            <ul class="nav">
+              <li class="nav-item">
+                <a class="nav-link active" href="/members">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/">Generate a password</a>
+              </li>
+            </ul>
+
+       
+        <button class="btn btn-danger my-2 my-sm-0" name="username" type="submit">
+          Logout
+        </button>
+      </form>
+      <% } %>
   </nav>
 </header>
