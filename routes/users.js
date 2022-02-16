@@ -13,7 +13,6 @@ module.exports = (db) => {
     db.query(`SELECT * FROM users;`)
       .then(data => {
         const users = data.rows;
-        //users_id = session?? cookies
         res.json({ users });
       })
       .catch(err => {
