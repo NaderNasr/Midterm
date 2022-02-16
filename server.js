@@ -94,10 +94,16 @@ app.get("/login", (req, res) => {
 
 });
 
-const renderUserWebsite = () => {
+const renderUserWebsite = (userId) => {
   return db.query(`
-      SELECT websites.*, users.name FROM websites
-    `, [userId]);
+  SELECT users.id, websites.name FROM users
+JOIN websites ON users.id = user_id
+WHERE users.id = $1
+    `, [userId])
+
+    .catch((error) => {
+      console.log('renderUserWebsite: ', error.message);
+    });
 };
 
 app.get("/members", (req, res) => {
@@ -105,7 +111,17 @@ app.get("/members", (req, res) => {
   if (!session) {
     res.render("login");
   }
-  res.render("member_homepage");
+  renderUserWebsite(session)
+    .then((data) => {
+      let result = data.rows[0];
+      let tempVars = {
+        result
+      };
+      console.log(tempVars);
+      res.render("member_homepage", tempVars);
+    });
+
+
 });
 
 // Add function in helper dir
@@ -129,11 +145,11 @@ app.post("/register", (req, res) => {
   console.log(req.session["user_id"]);
   //verify email
   addUser(name, hashedPassword, email)
-    .then((res) => {
-      res['userId'] = {
-        id: name,
+    .then((result) => {
+      result['userId'] = {
+        name,
         email,
-        password: hashedPassword
+        hashedPassword
       };
     });
 
@@ -175,11 +191,8 @@ app.post("/login", (req, res) => {
     })
     .catch((err) => {
       console.log(err.message);
+      res.send('Wrong email or password');
     });
-});
-
-app.get('/login', (req, res) => {
-  res.render('login');
 });
 
 
@@ -192,24 +205,31 @@ const addToVault = (name, username, url, password) => {
   return db.query(`
   INSERT INTO websites (name, username, url, password)
   VALUES($1, $2, $3, $4) RETURNING *;
-  `, [name, username, url, password])
-    .then((result) => {
-      result.rows[0];
-    })
-    .catch((err) => {
-      console.log(err.message);
-    });
+  `, [name, username, url, password]);
 };
 
 app.post('/membersPage', (req, res) => {
-  // name, username, url, password
+  const session = req.session["user_id"];
+  if (!session) {
+    res.render('/login');
+  }
   const name = req.body.name;
   const username = req.body.username;
   const url = req.body.url;
   const password = req.body.password;
-  //Find user_id /////////////////////////////////////////////////////////////////// HELP
-  addToVault(name, username, url, password);
-  res.redirect('/');
+
+
+  addToVault(name, username, url, password)
+    .then((result) => {
+      //set the row to the current user id
+      result.rows[0]["user_id"] = session;
+      console.log(result.rows);
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+  
+  res.render('member_homepage');
 });
 
 // app.post('/delete') delete from table DELETE FROM ...
