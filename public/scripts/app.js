@@ -58,6 +58,5 @@ $(() => {
       .catch(() => {
         alert("something went wrong");
       });
-    /* Alert the copied text */
   });
 });
