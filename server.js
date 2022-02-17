@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 // load .env data into process.env
 require("dotenv").config();
 
@@ -74,6 +75,7 @@ const renderUserWebsite = (userId) => {
   SELECT users.name as username, users.id FROM users
 
   WHERE users.id = $1
+
   `, [userId])
     .catch((error) => {
       console.log('renderUserWebsite: ', error.message);
@@ -85,8 +87,11 @@ const joinUserWebsite = (userId) => {
   SELECT websites.username, websites.name, websites.password, websites.url FROM websites
   WHERE user_id = $1
   `, [userId])
+    .then((result) => {
+      return result.rows;
+    })
     .catch((error) => {
-      console.log('renderUserWebsite: ', error.message);
+      console.log('joinUserWebsite: ', error.message);
     });
 };
 
@@ -98,7 +103,27 @@ const addUser = (name, password, email) => {
   VALUES($1, $2, $3) RETURNING *;`, [name, password, email])
     .then((result) => result.rows[0])
     .catch((error) => {
-      console.log(error.message);
+      console.log('addUser: ',error.message);
+    });
+};
+
+const addToVault = (name, username, url, password, user_id) => {
+  return db.query(`
+  INSERT INTO websites (name, username, url, password, user_id)
+  VALUES($1, $2, $3, $4, $5) RETURNING *;
+  `, [name, username, url, password, user_id])
+    .then((result) => result.rows[0])
+    .catch((error) => {
+      console.log('addToVault: ',error.message);
+    });
+};
+
+const getUserWithEmail = (email) => {
+  return db
+    .query(`SELECT * FROM users WHERE users.email = $1;` ,[email])
+    .then((result) => result.rows[0])
+    .catch((err) => {
+      console.log('getUserWithEmail: ',err.message);
     });
 };
 
@@ -131,14 +156,10 @@ app.get("/register", (req, res) => {
 
 app.get("/login", (req, res) => {
   const session = req.session["user_id"];
-
   let vars = {
-
     user: session
   };
-
   res.render('login', vars);
-
 });
 
 app.get("/members", (req, res) => {
@@ -149,20 +170,23 @@ app.get("/members", (req, res) => {
   }
   renderUserWebsite(session)
     .then((result) => {
-      // let x = result.rows[0].id;
-      joinUserWebsite(1)
+      let userID = result.rows[0].id;
+      console.log(userID);
+      joinUserWebsite(session)
         .then((joined) => {
-          console.log(joined.rows[0]);
+          console.log('JOINED',joined);
           let vars = {
             result: result.rows[0],
-            joined: joined.rows[0],
+            joined: joined,
             user: session
           };
 
           res.render("member_homepage", vars);
         });
-
     });
+
+
+  // });
 
 
 });
@@ -191,15 +215,6 @@ app.post("/register", (req, res) => {
   //if email exists alert user
 });
 
-const getUserWithEmail = (email) => {
-  return db
-    .query(`SELECT * FROM users WHERE users.email = $1;` ,[email])
-    .then((result) => result.rows[0])
-    .catch((err) => {
-      console.log(err.message);
-    });
-};
-
 
 app.post("/login", (req, res) => {
   const email = req.body.email;
@@ -226,20 +241,7 @@ app.post("/login", (req, res) => {
     });
 });
 
-
-app.post('/logout', (req, res) => {
-  req.session["user_id"] = null;
-  res.redirect('/register');
-});
-
-const addToVault = (name, username, url, password) => {
-  return db.query(`
-  INSERT INTO websites (name, username, url, password)
-  VALUES($1, $2, $3, $4) RETURNING *;
-  `, [name, username, url, password]);
-};
-
-app.post('/membersPage', (req, res) => {
+app.post('/members', (req, res) => {
   const session = req.session["user_id"];
   if (!session) {
     let tempVars = {
@@ -252,22 +254,24 @@ app.post('/membersPage', (req, res) => {
   const url = req.body.url;
   const password = req.body.password;
 
-  addToVault(name, username, url, password)
+  addToVault(name, username, url, password, session)
     .then((result) => {
       //set the row to the current user id
-      result.rows[0]["user_id"] = session;
       console.log(result.rows);
     })
     .catch((err) => {
       console.log(err.message);
     });
 
-  res.render('member_homepage');
+  res.redirect('/members');
 });
 
 // app.post('/delete') delete from table DELETE FROM ...
 
-
+app.post('/logout', (req, res) => {
+  req.session["user_id"] = null;
+  res.redirect('/register');
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
