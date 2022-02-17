@@ -8,22 +8,25 @@
   <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
   <link rel="stylesheet" href="/styles/main.css" type="text/css" />
   <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
   <script type="text/javascript" src="/scripts/app.js"></script>
   <script type="text/javascript" src="/scripts/passwordGenerator.js"></script>
-
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </head>
 
 <body>
   <%- include('partials/header') %>
-  <%- include('partials/sidebar') %>
+    <%- include('partials/sidebar') %>
 
-  <div class="container-fluid">
+      <div class="container-fluid">
 
-    <form method="POST" action="/savePassword" style="margin-left: 20px; margin-top: 10px">
-      <h1>Create a New Password Vault</h1>
-      <div class="form-row">
+        <form method="POST" action="/members" style="margin-left: 20px; margin-top: 10px">
+          <h1>Create a New Password Vault</h1>
+          <div class="form-row">
             <div class="form-group col-md-6">
               <label for="inputEmail4">Username</label>
               <input type="text" class="form-control" name="username" placeholder="username" required>
@@ -40,34 +43,42 @@
 
           <div class="form-row">
             <div class="form-group col-md-6">
-                <label for="uppercase">Uppercase</label>
-                <input type="checkbox" name="uppercase">
-                <br/>
-                <label for="lowercase">Lowercase</label>
-                <input type="checkbox" name="lowercase">
-                <br/>
-                <label for="number">Number</label>
-                <input type="checkbox" name="number">
-                <br/>
-                <label for="sym">Symbols</label>
-                <input type="checkbox" name="symbol">
-                <br/>
-              </div>
-              <button class="generate">Generate</button>
-              <div class="result"></div>
-            </div>
-            <div class="col-md-6 color">
-              <label>copy to clipboard</label>
-              <button class="btn btn-primary">
-                Copy
-              </button>
+              <label for="uppercase">Uppercase</label>
+              <input type="checkbox" name="uppercase">
+              <br />
+              <label for="lowercase">Lowercase</label>
+              <input type="checkbox" name="lowercase">
+              <br />
+              <label for="number">Number</label>
+              <input type="checkbox" name="number">
+              <br />
+              <label for="sym">Symbols</label>
+              <input type="checkbox" name="symbol">
+              <br />
             </div>
           </div>
+          <div>
+            <button onclick="copy('.result')" class="btn btn-primary">Copy</button>
+            <label>copy to clipboard</label>
+          </div>
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              category
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="#">entertainment</a>
+              <a class="dropdown-item" href="#">work</a>
+              <a class="dropdown-item" href="#">Social</a>
+            </div>
+          </div>
+          <div class="password">
+            <button class="generate">Generate</button>
+            <div class="result"></div>
+          </div>
           <button type="submit" id="newVault" class="btn btn-primary">Save</button>
-          <button type="submit" class="btn btn-primary">Cancel</button>
-
-        </form>
-  </div>
+          <button type="submit" class="btn btn-danger">Cancel</button>
+      </div>
+      </form>
+      </div>
 </body>
-
 </html>
