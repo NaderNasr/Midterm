@@ -32,7 +32,7 @@ $(() => {
 
 
     let result = "";
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < loopLength; i++) {
       let num = Math.floor(Math.random() * password.length);
       result += password[num];
     }
