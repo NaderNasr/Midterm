@@ -6,9 +6,6 @@
 // Client facing scripts here
 $(() => {
   $('.result').on('click', copy);
-
-
-
   const generate = document.querySelector(".generate");
   const name = (type) => {
     return document.querySelector("input[name=" + type + "]").checked;
