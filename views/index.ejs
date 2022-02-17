@@ -13,11 +13,22 @@
   <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
   <script type="text/javascript" src="/scripts/app.js"></script>
   <script type="text/javascript" src="/scripts/passwordGenerator.js"></script>
-
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </head>
 
 <body>
   <%- include('partials/header') %>
+<<<<<<< HEAD
+    <%- include('partials/sidebar') %>
+
+      <div class="container-fluid">
+
+        <form method="POST" action="/members" style="margin-left: 20px; margin-top: 10px">
+          <h1>Create a New Password Vault</h1>
+          <div class="form-row">
+=======
 
 
 
@@ -32,6 +43,7 @@
           <h1>Create a New Password Vault</h1>
           <div class="form-row">
 
+>>>>>>> origin/master
             <div class="form-group col-md-6">
               <label for="inputEmail4">Username</label>
               <input type="text" class="form-control" name="username" placeholder="username" required>
@@ -48,6 +60,34 @@
 
           <div class="form-row">
             <div class="form-group col-md-6">
+<<<<<<< HEAD
+              <label for="uppercase">Uppercase</label>
+              <input type="checkbox" name="uppercase">
+              <br />
+              <label for="lowercase">Lowercase</label>
+              <input type="checkbox" name="lowercase">
+              <br />
+              <label for="number">Number</label>
+              <input type="checkbox" name="number">
+              <br />
+              <label for="sym">Symbols</label>
+              <input type="checkbox" name="symbol">
+              <br />
+            </div>
+          </div>
+          <div>
+            <button onclick="copy('.result')" class="btn btn-primary">Copy</button>
+            <label>copy to clipboard</label>
+          </div>
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              category
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="#">entertainment</a>
+              <a class="dropdown-item" href="#">work</a>
+              <a class="dropdown-item" href="#">Social</a>
+=======
 
               <input id="checkbox" type="checkbox"/>
               <label for="checkbox_1">Contains Special Characters</label>
@@ -76,16 +116,26 @@
               </button>
 
 
+>>>>>>> origin/master
             </div>
           </div>
+          <div class="password">
+            <button class="generate">Generate</button>
+            <div class="result"></div>
+          </div>
           <button type="submit" id="newVault" class="btn btn-primary">Save</button>
+<<<<<<< HEAD
+          <button type="submit" class="btn btn-danger">Cancel</button>
+      </div>
+      </form>
+=======
       <button type="submit"  class="btn btn-danger">Cancel</button>
       </div>
 
 
       </form>
 
+>>>>>>> origin/master
       </div>
 </body>
-
 </html>
