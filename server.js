@@ -151,7 +151,6 @@ app.get("/register", (req, res) => {
     user: session
   };
   res.render('register', vars);
-
 });
 
 app.get("/login", (req, res) => {
@@ -165,6 +164,7 @@ app.get("/login", (req, res) => {
 app.get("/members", (req, res) => {
   const session = req.session["user_id"];
   console.log('member ID: ', session);
+
   if (!session) {
     return res.send(pleaseLoginMSG);
   }
@@ -253,6 +253,7 @@ app.post('/members', (req, res) => {
   const username = req.body.username;
   const url = req.body.url;
   const password = req.body.password;
+  console.log('Password: ', password);
 
   addToVault(name, username, url, password, session)
     .then((result) => {
