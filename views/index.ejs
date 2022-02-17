@@ -2,13 +2,14 @@
 <html lang="en">
 
 <head>
-  <title>Home Page</title>
+  <title>Generate Password</title>
 
   <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
   <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
   <link rel="stylesheet" href="/styles/main.css" type="text/css" />
   <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
   <script type="text/javascript" src="/scripts/app.js"></script>
   <script type="text/javascript" src="/scripts/passwordGenerator.js"></script>
@@ -17,16 +18,16 @@
 
 <body>
   <%- include('partials/header') %>
-  <%- include('partials/sidebar') %>
+    <%- include('partials/sidebar') %>
 
-  <div class="container-fluid">
+      <div class="container-fluid">
 
-    <form method="POST" action="/savePassword" style="margin-left: 20px; margin-top: 10px">
-      <h1>Create a New Password Vault</h1>
-      <div class="form-row">
+        <form method="POST" action="/members" style="margin-left: 20px; margin-top: 10px">
+          <h1>Create a New Password Vault</h1>
+          <div class="form-row">
             <div class="form-group col-md-6">
-              <label for="inputEmail4">Username</label>
-              <input type="text" class="form-control" name="username" placeholder="username" required>
+              <label for="inputEmail4">E-mail</label>
+              <input type="email" class="form-control" name="username" placeholder="username" required>
             </div>
             <div class="form-group col-md-6">
               <label for="inputPassword4">Website Name</label>
@@ -37,45 +38,46 @@
             <label for="inputAddress">Website URL</label>
             <input type="url" class="form-control" name="url" placeholder="url" value="https://" required>
           </div>
-
-          <div class="form-group col-sm-6">
-            <!-- <input type="number" class="form-control" name="length" placeholder="passwordlength" required> -->
-
+          <div class="form-group">
+            <label for="inputAddress">Password: </label>
+            <p for="inputAddress" class="result"></p>
+            <input type="text" class="form-control" name="password" placeholder="password" required>
           </div>
-          <div class="form-row">
+          <div class="form-row col">
             <div class="form-group col-md-6">
-              <label for="length">Password length 12 characters</label>
-                <input type="checkbox" name="length">
-                <br/>
-                <label for="uppercase">Uppercase</label>
-                <input type="checkbox" name="uppercase">
-                <br/>
-                <label for="lowercase">Lowercase</label>
-                <input type="checkbox" name="lowercase">
-                <br/>
-                <label for="number">Number</label>
-                <input type="checkbox" name="number">
-                <br/>
-                <label for="sym">Symbols</label>
-                <input type="checkbox" name="symbol">
-                <br/>
+              <label for="length1">12 Characters</label>
+              <input type="checkbox" name="length1">
+              <br />
+              <label for="length2">24 Characters</label>
+              <input type="checkbox" name="length2">
+              <br />
+              <label for="uppercase">Uppercase</label>
+              <input type="checkbox" name="uppercase">
+              <br />
+              <label for="lowercase">Lowercase</label>
+              <input type="checkbox" name="lowercase">
+              <br />
+              <label for="number">Number</label>
+              <input type="checkbox" name="number">
+              <br />
+              <label for="sym">Symbols</label>
+              <input type="checkbox" name="symbol">
+              <br />
+            </div>
+            <div class="password container col">
+              <button class="generate">Generate Password</button>
+              <div class="password container">
+                <button onclick="copy('.result')" class="clip btn btn-primary">Copy password</button>
               </div>
-              <button class="generate">Generate</button>
-              <div class="result"></div>
             </div>
-            <div class="col-md-6 color">
-              <label>copy to clipboard</label>
-              <button class="btn btn-primary">
-                Copy
-              </button>
-            </div>
+
+
           </div>
+
           <button type="submit" id="newVault" class="btn btn-primary">Save</button>
-          <button type="submit" class="btn btn-primary">Cancel</button>
-
-        </form>
-  </div>
-
+          <button type="submit" class="btn btn-danger">Cancel</button>
+      </div>
+      </form>
+      </div>
 </body>
-
 </html>
