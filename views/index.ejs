@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Home Page</title>
+  <title>Generate Password</title>
 
   <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
   <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
@@ -20,33 +20,15 @@
 
 <body>
   <%- include('partials/header') %>
-<<<<<<< HEAD
     <%- include('partials/sidebar') %>
 
       <div class="container-fluid">
-
-        <form method="POST" action="/members" style="margin-left: 20px; margin-top: 10px">
-          <h1>Create a New Password Vault</h1>
-          <div class="form-row">
-=======
-
-
-
-    <%- include('partials/sidebar') %>
-
-
-      <div class="container-fluid">
-
-
-
         <form method="POST" action="/membersPage" style="margin-left: 20px; margin-top: 10px">
           <h1>Create a New Password Vault</h1>
           <div class="form-row">
-
->>>>>>> origin/master
             <div class="form-group col-md-6">
-              <label for="inputEmail4">Username</label>
-              <input type="text" class="form-control" name="username" placeholder="username" required>
+              <label for="inputEmail4">E-mail</label>
+              <input type="email" class="form-control" name="username" placeholder="username" required>
             </div>
             <div class="form-group col-md-6">
               <label for="inputPassword4">Website Name</label>
@@ -57,10 +39,13 @@
             <label for="inputAddress">Website URL</label>
             <input type="url" class="form-control" name="url" placeholder="url" value="httpe://" required>
           </div>
-
-          <div class="form-row">
+          <div class="form-group">
+            <label for="inputAddress">Password: </label>
+            <p for="inputAddress" class="result"></p>
+            <input type="text" class="form-control" name="password" placeholder="password" required>
+          </div>
+          <div class="form-row col">
             <div class="form-group col-md-6">
-<<<<<<< HEAD
               <label for="uppercase">Uppercase</label>
               <input type="checkbox" name="uppercase">
               <br />
@@ -74,6 +59,14 @@
               <input type="checkbox" name="symbol">
               <br />
             </div>
+            <div class="password container col">
+              <button class="generate">Generate Password</button>
+              <div class="password container">
+                <button onclick="copy('.result')" class="clip btn btn-primary">Copy password</button>
+              </div>
+            </div>
+
+
           </div>
           <div>
             <button onclick="copy('.result')" class="btn btn-primary">Copy</button>
@@ -87,36 +80,6 @@
               <a class="dropdown-item" href="#">entertainment</a>
               <a class="dropdown-item" href="#">work</a>
               <a class="dropdown-item" href="#">Social</a>
-=======
-
-              <input id="checkbox" type="checkbox"/>
-              <label for="checkbox_1">Contains Special Characters</label>
-              <br/>
-              <input id="checkbox" type="checkbox"/>
-              <label for="checkbox_2">Contains Lowercase</label>
-              <br/>
-              <input id="checkbox" type="checkbox"/>
-              <label for="checkbox_3">Contains Uppercase</label>
-              <br/>
-              <input id="checkbox" type="checkbox"/>
-              <label for="checkbox_4">Contains Numbers</label>
-              <br/>
-              <input id="checkbox" type="checkbox"/>
-              <label for="checkbox_5">12 Characters</label>
-              <br/>
-              <input id="checkbox" type="checkbox"/>
-              <label for="checkbox_6">24 Characters</label>
-              <br/>
-              <button>Generate Password</button>
-            </div>
-            <div class="col-md-6 color">
-              <label>copy to clipboard</label>
-              <button class="btn btn-primary">
-                Copy
-              </button>
-
-
->>>>>>> origin/master
             </div>
           </div>
           <div class="password">
@@ -124,18 +87,11 @@
             <div class="result"></div>
           </div>
           <button type="submit" id="newVault" class="btn btn-primary">Save</button>
-<<<<<<< HEAD
           <button type="submit" class="btn btn-danger">Cancel</button>
       </div>
       </form>
-=======
-      <button type="submit"  class="btn btn-danger">Cancel</button>
       </div>
-
-
       </form>
-
->>>>>>> origin/master
       </div>
 </body>
 </html>
