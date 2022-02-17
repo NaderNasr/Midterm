@@ -19,19 +19,21 @@
   <%- include('partials/header') %>
   <%- include('partials/sidebar') %>
 
+  <% for(let pass of joined) { %>
   <div class="container-fluid row">
   <div class="col-sm-6 mb-3">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title"><%= joined.name %></h5>
-        <p class="card-text"><%= joined.username %></p>
-        <p class="card-text"><%= joined.url %></p>
-        <p class="card-text"><%= joined.password %></p>
+        <h5 class="card-title"><%= pass.username %></h5>
+        <p class="card-text"><%= pass.name %></p>
+        <p class="card-text"><%= pass.url %></p>
+        <p class="card-text"><%= pass.password %></p>
 
         <a href="/" class="btn btn-primary">Edit</a>
       </div>
     </div>
   </div>
 </div>
+<% } %>
 </body>
 </html>
