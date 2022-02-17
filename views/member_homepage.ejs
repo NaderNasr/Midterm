@@ -2,38 +2,70 @@
 <html lang="en">
 
 <head>
-  <title>Home Page</title>
+  <title>Saved Passwords</title>
 
   <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
   <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
   <link rel="stylesheet" href="/styles/main.css" type="text/css" />
   <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+    integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
   <script type="text/javascript" src="/scripts/app.js"></script>
-  <script type="text/javascript" src="/scripts/passwordGenerator.js"></script>
 
 </head>
 
 <body>
   <%- include('partials/header') %>
-  <%- include('partials/sidebar') %>
+    <%- include('partials/sidebar') %>
 
-  <% for(let pass of joined) { %>
-  <div class="container-fluid row">
-  <div class="col-sm-6 mb-3">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title"><%= pass.username %></h5>
-        <p class="card-text"><%= pass.name %></p>
-        <p class="card-text"><%= pass.url %></p>
-        <p class="card-text"><%= pass.password %></p>
 
-        <a href="/" class="btn btn-primary">Edit</a>
-      </div>
-    </div>
-  </div>
-</div>
-<% } %>
+      <% if(joined.length===0) { %>
+        <div class="container-fluid col-sm-12 ">
+          <div class="mb-3">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">You have no passwords</h5>
+
+                <a href="/" class="btn btn-primary">Add New Password</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% } else { %>
+          <% for(let i = 0; i < joined.length; i++) { %>
+
+            <div class="container-fluid col-sm-12 ">
+              <div class="mb-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h3 class="card-title">
+                        Vault #<%= i %>
+                      </h3>
+                      <h5 class="card-title">
+                        <%= joined[i].username %>
+                      </h5>
+                      <p class="card-text">
+                        <%= joined[i].name %>
+                      </p>
+                      <p class="card-text">
+                        <%= joined[i].url %>
+                      </p>
+                      <p class="card-text">
+                        <%= joined[i].password %>
+                      </p>
+                      <a href="/" class="btn btn-primary">Edit</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <% } %>
+
+              <% } %>
+
+
+
+
 </body>
+
 </html>

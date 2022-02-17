@@ -5,6 +5,10 @@
 
 // Client facing scripts here
 $(() => {
+  $('.result').on('click', copy);
+
+
+
   const generate = document.querySelector(".generate");
   const name = (type) => {
     return document.querySelector("input[name=" + type + "]").checked;
@@ -16,47 +20,45 @@ $(() => {
         !document.querySelector("input[name=number]").checked &&
         !document.querySelector("input[name=lowercase]").checked &&
         !document.querySelector("input[name=symbol]").checked) {
+
       return alert('Please select a checkbox');
     }
 
+    if (!document.querySelector("input[name=length1]").checked &&
+          !document.querySelector("input[name=length2]").checked) {
+      return alert('How long would you like the password to be?');
+    }
+
+    let loopLength = 0;
     let password = "";
     let uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     let lowercase = "abcdefghijklmnopqrstuvwxyz";
     let number = "0123456789";
-    let symbol = "~*$%@#^&!?*'-=/,.{}()[]<>";
+    let symbol = "~*$%@#^&!?*'-=/,.{}()[]>";
 
+    if (name("length1")) loopLength += 12;
+    if (name("length2")) loopLength += 24;
     if (name("uppercase")) password += uppercase;
     if (name("lowercase")) password += lowercase;
     if (name("number")) password += number;
     if (name("symbol")) password += symbol;
 
-
     let result = "";
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < loopLength; i++) {
       let num = Math.floor(Math.random() * password.length);
       result += password[num];
     }
     console.log(result);
     document.querySelector(".result").innerHTML = result;
-  });
-
-  // onclick copy to clipboard
-
-  const copy = document.querySelector(".copyToClipboard");
-  copy.addEventListener("click", () => {
-    /* Get the text field */
-    let copyText = document.querySelector(".result");
-    console.log("text");
-    /* Select the text field */
-
-    /* Copy the text inside the text field */
-    navigator.clipboard
-      .writeText(copyText.textContent)
-      .then(() => {
-        alert("successfully copied");
-      })
-      .catch(() => {
-        alert("something went wrong");
-      });
+    // $("input:password").val(result);
   });
 });
+
+const copy = (element) => {
+  let $temp = $("<input>");
+  $("body").append($temp);
+  $temp.val($(element).text()).select();
+  document.execCommand("copy");
+  $temp.remove();
+  alert('Password copied to clipboard');
+};
