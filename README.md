@@ -1,24 +1,24 @@
-LHL Node Skeleton
+Password KeepR
 =========
 
-## Project Setup
+## Preview
 
-The following steps are only for _one_ of the group members to perform.
-
-1. Create your own copy of this repo using the `Use This Template` button, ideally using the name of your project. The repo should be marked Public
-2. Verify that the skeleton code now shows up in your repo on GitHub, you should be automatically redirected
-3. Clone your copy of the repo to your dev machine
-4. Add your team members as collaborators to the project so that they can push to this repo
-5. Let your team members know the repo URL so that they use the same repo (they should _not_ create a copy/fork of this repo since that will add additional workflow complexity to the project)
 
 
 ## Getting Started
 
 1. Create the `.env` by using `.env.example` as a reference: `cp .env.example .env`
+    
 2. Update the .env file with your correct local information 
-  - username: `labber` 
-  - password: `labber` 
-  - database: `midterm`
+       
+       DB_USER=USER
+       DB_PASS=PASSWORD
+       DB_NAME=DB-NAME
+       DB_HOST=localhost
+       DB_PORT=PORT
+       DB_URL=postgres://USER:PASS@localhost:PORT/DB-NAME
+   
+
 3. Install dependencies: `npm i`
 4. Fix to binaries for sass: `npm rebuild node-sass`
 5. Reset database: `npm run db:reset`
@@ -41,3 +41,12 @@ The following steps are only for _one_ of the group members to perform.
 - Node 10.x or above
 - NPM 5.x or above
 - PG 6.x
+- Bcrypt
+- Express
+- Cookie-Session
+- SASS
+- Morgan
+- EJS
+- Dotenv
+- chalk
+- Body-parser
